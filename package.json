@@ -3,15 +3,15 @@
   "type": "module",
   "version": "0.1.0",
   "packageManager": "pnpm@7.1.1",
-  "description": "Register global imports on demand for Vite and Webpack",
+  "description": "Auto generate style file and import into entry file.",
   "license": "MIT",
-  "homepage": "https://github.com/antfu/unplugin-starter#readme",
+  "homepage": "https://github.com/CrabSAMA/unplugin-auto-theme#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/unplugin-starter.git"
+    "url": "git+https://github.com/CrabSAMA/unplugin-auto-theme.git"
   },
   "bugs": {
-    "url": "https://github.com/antfu/unplugin-starter/issues"
+    "url": "https://github.com/CrabSAMA/unplugin-auto-theme/issues"
   },
   "keywords": [
     "unplugin",

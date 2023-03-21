@@ -5,7 +5,7 @@ import path from 'path'
 import { createUnplugin } from 'unplugin'
 import type { Options } from './types'
 
-export default createUnplugin<Options | undefined>((_options) => {
+export default createUnplugin<Options | undefined>((options) => {
   // 拉取数据
   // const response = await axios.get('https://static.huolala.cn/schema/ffba3a0a04de40d4a6d9e5725ccda28b_data.json')
   // const data = response?.data?.data?.apiDocMap
@@ -23,10 +23,11 @@ export default createUnplugin<Options | undefined>((_options) => {
         fs.mkdirSync('.temp')
 
       newFilePath = path.resolve('./.temp/test.less')
-      fs.writeFileSync(newFilePath, data)
+      if (!fs.existsSync(newFilePath))
+        fs.writeFileSync(newFilePath, data)
     },
     transformInclude(id) {
-      return id.endsWith('main.ts')
+      return options && id.includes(options.entry)
     },
     transform(code) {
       // 在代码开头添加一段自定义代码
@@ -37,10 +38,20 @@ export default createUnplugin<Options | undefined>((_options) => {
         map: null,
       }
     },
-    buildEnd() {
-      fs.rmSync(newFilePath)
-      if (fs.existsSync('.temp'))
-        fs.rmdirSync('.temp')
+    vite: {
+      buildEnd() {
+        fs.rmSync(newFilePath)
+        if (fs.existsSync('.temp'))
+          fs.rmdirSync('.temp')
+      },
+    },
+    webpack(compiler) {
+      // FIXME 不知道为什么 webpack不会触发 shutdown hook
+      compiler.hooks.shutdown.tap('unplugin-auto-theme', () => {
+        fs.rmSync(newFilePath)
+        if (fs.existsSync('.temp'))
+          fs.rmdirSync('.temp')
+      })
     },
   }
 })
